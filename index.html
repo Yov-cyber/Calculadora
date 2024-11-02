@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yova Calculator</title>
+    <style>
+        /* Centrar y dar estilo a la página */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #e0e6ed;
+        }
+
+        /* Contenedor principal de la calculadora */
+        .calculator {
+            width: 320px;
+            background-color: #333;
+            border-radius: 15px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Nombre en la esquina */
+        .calculator::before {
+            content: "Yova Calculator";
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 12px;
+            color: #b2b2b2;
+        }
+
+        /* Pantalla de la calculadora */
+        .display {
+            background-color: #222;
+            color: #fff;
+            font-size: 32px;
+            padding: 20px;
+            text-align: right;
+            overflow: hidden;
+        }
+
+        /* Sección de botones */
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+        }
+
+        /* Botones de la calculadora */
+        .button {
+            background-color: #4d4d4d;
+            color: #fff;
+            font-size: 20px;
+            padding: 20px 0;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .button:hover {
+            background-color: #666;
+        }
+
+        /* Botones de operaciones */
+        .button.operation {
+            background-color: #ff9500;
+        }
+
+        .button.operation:hover {
+            background-color: #d57c00;
+        }
+
+        /* Botón igual */
+        .button.equals {
+            background-color: #ff3b30;
+            grid-column: span 2;
+        }
+
+        .button.equals:hover {
+            background-color: #d73327;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <div class="button" onclick="appendNumber('7')">7</div>
+            <div class="button" onclick="appendNumber('8')">8</div>
+            <div class="button" onclick="appendNumber('9')">9</div>
+            <div class="button operation" onclick="chooseOperation('/')">÷</div>
+
+            <div class="button" onclick="appendNumber('4')">4</div>
+            <div class="button" onclick="appendNumber('5')">5</div>
+            <div class="button" onclick="appendNumber('6')">6</div>
+            <div class="button operation" onclick="chooseOperation('*')">×</div>
+
+            <div class="button" onclick="appendNumber('1')">1</div>
+            <div class="button" onclick="appendNumber('2')">2</div>
+            <div class="button" onclick="appendNumber('3')">3</div>
+            <div class="button operation" onclick="chooseOperation('-')">−</div>
+
+            <div class="button" onclick="appendNumber('0')">0</div>
+            <div class="button" onclick="appendNumber('.')">.</div>
+            <div class="button equals" onclick="calculate()">=</div>
+            <div class="button operation" onclick="chooseOperation('+')">+</div>
+        </div>
+    </div>
+
+    <script>
+        let currentInput = "";
+        let previousInput = "";
+        let operation = null;
+
+        function updateDisplay() {
+            document.getElementById('display').textContent = currentInput || "0";
+        }
+
+        function appendNumber(number) {
+            if (number === "." && currentInput.includes(".")) return;
+            currentInput = currentInput.toString() + number.toString();
+            updateDisplay();
+        }
+
+        function chooseOperation(op) {
+            if (currentInput === "") return;
+            if (previousInput !== "") {
+                calculate();
+            }
+            operation = op;
+            previousInput = currentInput;
+            currentInput = "";
+        }
+
+        function calculate() {
+            let result;
+            const prev = parseFloat(previousInput);
+            const current = parseFloat(currentInput);
+            if (isNaN(prev) || isNaN(current)) return;
+            switch (operation) {
+                case "+":
+                    result = prev + current;
+                    break;
+                case "-":
+                    result = prev - current;
+                    break;
+                case "*":
+                    result = prev * current;
+                    break;
+                case "/":
+                    result = prev / current;
+                    break;
+                default:
+                    return;
+            }
+            currentInput = result;
+            operation = null;
+            previousInput = "";
+            updateDisplay();
+        }
+    </script>
+</body>
+</html>
